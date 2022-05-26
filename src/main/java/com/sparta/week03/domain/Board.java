@@ -2,6 +2,9 @@ package com.sparta.week03.domain;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.persistence.*;
 
@@ -43,4 +46,9 @@ public class Board extends Timestamped { // 생성,수정 시간을 자동으로
         this.writer = requestDto.getWriter();
         this.contents = requestDto.getContents();
     }
+
+    public void checkPw(BoardRequestDto requestDto){
+        this.password = requestDto.getPassword();
+    }
 }
+

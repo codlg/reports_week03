@@ -22,4 +22,12 @@ public class BoardService {
         board.update(requestDto);
         return board.getId();
     }
+
+    public String checkPassword (Long id, BoardRequestDto requestDto){
+        Board board = boardRepository.findById(id).orElseThrow(
+                ()-> new NullPointerException("비밀번호가 존재하지 않습니다.")
+        );
+        board.checkPw(requestDto);
+        return board.getPassword();
+    }
 }

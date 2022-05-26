@@ -17,13 +17,13 @@ public class BoardController {
     private final BoardService boardService;
 
     @PostMapping("/api/boards")
-    public Board createboard(@RequestBody BoardRequestDto requestDto) { //@RequestBody - 요청날아올때 넣기 위한 어노테이션
+    public Board createBoard(@RequestBody BoardRequestDto requestDto) { //@RequestBody - 요청날아올때 넣기 위한 어노테이션
         Board board = new Board(requestDto);
         return boardRepository.save(board);
     }
 
     @GetMapping("/api/boards")
-    public List<Board> getboard() {
+    public List<Board> getBoard() {
         return boardRepository.findAllByOrderByModifiedAtDesc();
     }
 
@@ -37,5 +37,11 @@ public class BoardController {
     public Long deleteBoard(@PathVariable Long id) { //@PathVariable - 경로에 있는 변수를 넣는다 {id}
         boardRepository.deleteById(id);
         return id;
+    }
+
+    @PutMapping("/api/boards/{id}/check")
+    public String checkPw (@PathVariable Long id, @RequestBody BoardRequestDto requestDto ){
+        boardService.checkPassword(id, requestDto);
+        return requestDto.getPassword();
     }
 }
