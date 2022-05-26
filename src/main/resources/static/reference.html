@@ -1,12 +1,15 @@
-<html lang="en"><head>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Timeline Service</title>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@500&amp;display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@500&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
     <style>
         @import url(//spoqa.github.io/spoqa-han-sans/css/SpoqaHanSans-kr.css);
@@ -24,21 +27,22 @@
             margin: 10px auto;
         }
 
-        .area-write {
-            width: 95%;
-            max-width: 400px;
-            margin: 10px auto 0px auto;
-            padding: 15px;
-            box-shadow: 0px 0px 3px 0px gray;
+        #contents {
+            width: 538px;
         }
 
-        .mybtns {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            justify-content: right;
+        .area-write {
+            position: relative;
+            width: 538px;
+        }
 
-            margin-top: 5px;
+        .area-write img {
+            cursor: pointer;
+            position: absolute;
+            width: 22.2px;
+            height: 18.7px;
+            bottom: 15px;
+            right: 17px;
         }
 
         .background-header {
@@ -46,14 +50,14 @@
             z-index: -1;
             top: 0px;
             width: 100%;
-            height: 490px;
+            height: 428px;
             background-color: #339af0;
         }
 
         .background-body {
             position: fixed;
             z-index: -1;
-            top: 490px;
+            top: 428px;
             height: 100%;
             width: 100%;
             background-color: #dee2e6;
@@ -89,6 +93,30 @@
             letter-spacing: -1.12px;
             text-align: center;
             color: #ffffff;
+        }
+
+        textarea.field {
+            width: 502px !important;
+            height: 146px;
+            border-radius: 5px;
+            background-color: #ffffff;
+            border: none;
+            padding: 18px;
+            resize: none;
+        }
+
+        textarea.field::placeholder {
+            width: 216px;
+            height: 16px;
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 16px;
+            font-weight: normal;
+            font-stretch: normal;
+            font-style: normal;
+            line-height: 1;
+            letter-spacing: -0.96px;
+            text-align: left;
+            color: #868e96;
         }
 
         .card {
@@ -182,13 +210,13 @@
     <script>
         // 미리 작성된 영역 - 수정하지 않으셔도 됩니다.
         // 사용자가 내용을 올바르게 입력하였는지 확인합니다.
-        function isValidtitle(title) {
+        function isValidTitle(title) {
             if (title == '') {
                 alert('제목을 입력해주세요');
                 return false;
             }
-            if (title.trim().length > 20) {
-                alert('공백 포함 20자 이하로 입력해주세요');
+            if (title.trim().length > 25) {
+                alert('공백 포함 25자 이하로 입력해주세요');
                 return false;
             }
             return true;
@@ -211,35 +239,31 @@
         function editPost(id) {
             showEdits(id);
 
+            let title = $(`#${id}-title`).text().trim();
+            $(`#${id}-textTitle`).val(title);
+
             let contents = $(`#${id}-contents`).text().trim();
             $(`#${id}-textarea`).val(contents);
-
-            let title = $(`#${id}-title`).text().trim();
-            $(`#${id}-texttitle`).val(title);
-
         }
 
         function showEdits(id) {
-            $(`#${id}-edittitle`).show();
-            $(`#${id}-editpassword`).show();
+            $(`#${id}-editPassword`).show();
+            $(`#${id}-editTitle`).show();
             $(`#${id}-editarea`).show();
             $(`#${id}-submit`).show();
             $(`#${id}-delete`).show();
 
-            $(`#${id}-password`).hide();
             $(`#${id}-title`).hide();
             $(`#${id}-contents`).hide();
             $(`#${id}-edit`).hide();
         }
 
         function hideEdits(id) {
-            $(`#${id}-edittitle`).hide();
-            $(`#${id}-editpassword`).hide();
+            $(`#${id}-editPassword`).hide();
+            $(`#${id}-editTitle`).hide();
             $(`#${id}-editarea`).hide();
             $(`#${id}-submit`).hide();
             $(`#${id}-delete`).hide();
-            $(`#${id}-password`).hide();
-
 
             $(`#${id}-title`).show();
             $(`#${id}-contents`).show();
@@ -264,13 +288,12 @@
                 success: function (response) {
                     for (let i = 0; i < response.length; i++) {
                         let board = response[i];
-                        let id = board.id;
-                        let title = board.title;
                         let writer = board.writer;
-                        let password = board.password
+                        let password = board.password;
+                        let title = board.title;
                         let contents = board.contents;
                         let modifiedAt = board.modifiedAt;
-                        addHTML(id, title, writer,password, contents, modifiedAt);
+                        addHTML(writer, password, title, contents, modifiedAt);
                     }
                 }
             })
@@ -278,12 +301,12 @@
 
         // 메모 하나를 HTML로 만들어서 body 태그 내 원하는 곳에 붙입니다.
         // 메모 하나를 HTML로 만들어서 body 태그 내 원하는 곳에 붙입니다.
-        function addHTML(id, title, writer, password, contents, modifiedAt) {
+        function addHTML(writer, password, title, contents, modifiedAt) {
             // 1. HTML 태그를 만듭니다.
             let tempHtml = `<div class="card">
-                <!-- date/username 영역 -->
+                <!-- date/writer 영역 -->
                 <div class="metadata">
-                     <div class="date">
+                    <div class="date">
                         ${modifiedAt}
                     </div>
                     <div id="${id}-writer" class="writer">
@@ -291,31 +314,25 @@
                     </div>
                 </div>
                 <!-- contents 조회/수정 영역-->
-                     <div class="contents">
-                            <div id="${id}-title" class="text" style="font-size:xx-large">
-                                ${title}
-                            </div>
-                            <div id="${id}-password" class="edit">
-                                ${password}
-                            </div>
-                            <div id="${id}-contents" class="text">
-                                ${contents}
-                            </div>
-
-                        <div id="${id}-edittitle" class="edit" style="font-size: xx-large">
-                          <label for="inputEmail4" class="form-label"></label>
-                          <input type="text" class="form-control" id="${id}-texttitle" placeholder="제목">
-                        </div>
-                        <div id="${id}-editpassword" class="edit">
-                            <label for="inputPassword4" class="form-label"></label>
-                            <input type="password" class="form-control" id="${id}-checkpassword" placeholder="비밀번호">
-                        </div>
-                        <div id="${id}-editarea" class="edit form-floating">
-                            <textarea class="form-control" placeholder="Leave a comment here" id="${id}-textarea" placeholder="내용을 입력해주세요." style="height: 100px"></textarea>
-                            <label for="floatingTextarea2"></label>
-                        </div>
+                <div class="contents">
+                    <div id="${id}-title" class="text" style="font-size: xx-large">
+                        ${title}
                     </div>
-
+                    <div id="${id}-contents" class="text">
+                        ${contents}
+                    </div>
+                    <div class="col-12" id="${id}-editTitle">
+                        <label for="editTitle" class="form-label"></label>
+                        <input type="text" class="form-control" id="${id}-textTitle" placeholder="제목을 입력해 주세요.">
+                    </div>
+                    <div class="col-md-6" id="${id}-editPassword">
+                         <label for="editPassword" class="form-label"></label>
+                         <input type="password" class="form-control" id="${id}-checkPassword">
+                    </div>
+                    <div id="${id}-editarea" class="edit">
+                        <textarea id="${id}-textarea" class="te-edit" name="" id="" cols="30" rows="5"></textarea>
+                    </div>
+                </div>
                 <!-- 버튼 영역-->
                 <div class="footer">
                     <img id="${id}-edit" class="icon-start-edit" src="images/edit.png" alt="" onclick="editPost('${id}')">
@@ -329,17 +346,18 @@
 
         // 메모를 생성합니다.
         function writePost() {
-            let writer = $('#writer').val();
-            let password = $('#password').val();
-            let title = $('#title').val();
+            let writer = $(`#writer`).val();
+            let password = $(`#password`).val();
+            let title = $(`#title`).val();
             let contents = $('#contents').val();
-            if(isValidtitle(title) == false){
+
+            if (isValidTitle(title) == false) {
                 return;
             }
             if (isValidContents(contents) == false) {   // 2. 작성한 메모가 올바른지 isValidContents 함수를 통해 확인합니다.
                 return;
             }
-            let data = {'title':title, 'writer': writer, 'password': password, 'contents': contents};    // 4. 전달할 data JSON으로 만듭니다.
+            let data = {'writer': writer, 'password': password, 'title': title, 'contents': contents};    // 4. 전달할 data JSON으로 만듭니다.
 
             $.ajax({                                    // 5. POST /api/memos 에 data를 전달합니다.
                 type: "POST",
@@ -355,17 +373,23 @@
 
         // 메모를 수정합니다.
         function submitEdit(id) {
-            let title = $(`#${id}-texttitle`).val().trim();          // 1. 작성 대상 메모의 username과 contents 를 확인합니다.
+            let password = $(`#${id}-checkPassword`).val();
+            let title = $(`#${id}-textTitle`).val().trim();
             let contents = $(`#${id}-textarea`).val().trim();
+            if (isValidContents(contents) == false) {                   // 2. 작성한 메모가 올바른지 isValidContents 함수를 통해 확인합니다.
+                return;
+            }
+            let data = {'title': title,'password': password, 'contents': contents};
+              // 3. 전달할 data JSON으로 만듭니다.
 
-            data = {'title': title,  'contents': contents};
-
-            $.ajax({
+            $.ajax({                                                    // 4. PUT /api/memos/{id} 에 data를 전달합니다.
                 type: "PUT",
-                url: `/api/boards/${id}`,
+                url: `/api/boards/${id}/check`,
                 contentType: "application/json",
                 data: JSON.stringify(data),
                 success: function (response) {
+
+
                     alert('메시지 변경에 성공하였습니다.');
                     window.location.reload();
                 }
@@ -398,74 +422,33 @@
 <div class="wrap">
     <div class="header">
         <h2>Timeline Service</h2>
-    </div>
-    <div class="area-write">
-        <form class="field row g-3">
-            <div class="col-md-6">
-                <label for="writer" class="form-label">Writer</label>
-                <input type="text" class="form-control" id="writer">
-            </div>
-            <div class="col-md-6">
-                <label for="password" class="form-label">Pw</label>
-                <input type="password" class="form-control" id="password">
-            </div>
-            <div class="mb-3">
-                <label for="title" class="form-label">Title</label>
-                <input type="text" class="form-control" id="title" placeholder="제목을 입력해주세요">
-            </div>
-            <div class="mb-3">
-                <label for="contents" class="form-label">Contents</label>
-                <textarea class="form-control" placeholder="내용을 입력해주세요" name="contents" id="contents" rows="3"></textarea>
-            </div>
-            <div class="mybtns">
-                <button type="button" class="btn btn-dark" onclick="writePost()">등록하기</button>
-            </div>
-        </form>
-    </div>
-    <div id="cards-box" class="area-read"><div class="card">
-        <!-- date/username 영역 -->
-        <div class="metadata">
-            <div class="date">
-                2022-05-26T13:51:59.683
-            </div>
-            <div id="13-writer" class="writer">
-                asdasd
+        <div class="area-write">
+            <form class="row g-3">
+                <div class="col-md-6">
+                    <label for="writer" class="form-label">writer</label>
+                    <input type="text" class="form-control" id="writer">
+                </div>
+                <div class="col-md-6">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password">
+                </div>
+                <div class="col-12">
+                    <label for="title" class="form-label">Title</label>
+                    <input type="text" class="form-control" id="title" placeholder="제목을 입력해 주세요.">
+                </div>
+                <div class="form-floating">
+                    <textarea class="form-control" placeholder="내용을 입력해 주세요" id="contents"
+                              style="height: 100px"></textarea>
+                    <label for="contents"></label>
+                </div>
+                <div class="col-12">
+                    <button type="submit" class="btn btn-dark" onclick="writePost()">등록하기</button>
+                </div>
+            </form>
+            <div id="cards-box" class="area-read">
+
             </div>
         </div>
-        <!-- contents 조회/수정 영역-->
-        <div class="contents">
-            <div id="13-title" class="text" style="font-size: xx-large; display: none;">
-                sdf
-            </div>
-            <div id="13-password" class="edit" style="display: none;">
-                sdf
-            </div>
-            <div id="13-contents" class="text" style="display: none;">
-                sdf
-            </div>
+</body>
 
-            <div id="13-edittitle" class="edit" style="font-size: xx-large; display: block;">
-                <label for="inputEmail4" class="form-label"></label>
-                <input type="text" class="form-control" id="13-texttitle" placeholder="제목">
-            </div>
-            <div id="13-editpassword" class="edit" style="display: block;">
-                <label for="inputPassword4" class="form-label"></label>
-                <input type="password" class="form-control" id="13-checkpassword" placeholder="비밀번호">
-            </div>
-            <div id="13-editarea" class="edit form-floating" style="display: block;">
-                <textarea class="form-control" placeholder="Leave a comment here" id="13-textarea" style="height: 100px"></textarea>
-                <label for="floatingTextarea2"></label>
-            </div>
-        </div>
-
-        <!-- 버튼 영역-->
-        <div class="footer">
-            <img id="13-edit" class="icon-start-edit" src="images/edit.png" alt="" onclick="editPost('13')" style="display: none;">
-            <img id="13-delete" class="icon-delete" src="images/delete.png" alt="" onclick="deleteOne('13')">
-            <img id="13-submit" class="icon-end-edit" src="images/done.png" alt="" onclick="submitEdit('13')" style="display: inline;">
-        </div>
-    </div></div>
-</div>
-
-
-</body></html>
+</html>
