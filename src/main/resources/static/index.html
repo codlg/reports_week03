@@ -27,8 +27,8 @@
         .area-write {
             width: 95%;
             max-width: 400px;
-            margin: 10px auto 0px auto;
-            padding: 15px;
+            margin: 20px auto 0px auto;
+            padding: 10px;
             box-shadow: 0px 0px 3px 0px gray;
         }
 
@@ -46,14 +46,14 @@
             z-index: -1;
             top: 0px;
             width: 100%;
-            height: 490px;
+            height: 510px;
             background-color: #339af0;
         }
 
         .background-body {
             position: fixed;
             z-index: -1;
-            top: 490px;
+            top: 510px;
             height: 100%;
             width: 100%;
             background-color: #dee2e6;
@@ -215,7 +215,7 @@
             $(`#${id}-textarea`).val(contents);
 
             let title = $(`#${id}-title`).text().trim();
-            $(`#${id}-texttitle`).val(title);
+            $(`#${id}-textTitle`).val(title);
 
         }
 
@@ -226,7 +226,7 @@
             $(`#${id}-submit`).show();
             $(`#${id}-delete`).show();
 
-         
+
             $(`#${id}-title`).hide();
             $(`#${id}-contents`).hide();
             $(`#${id}-edit`).hide();
@@ -238,7 +238,7 @@
             $(`#${id}-editArea`).hide();
             $(`#${id}-submit`).hide();
             $(`#${id}-delete`).hide();
-    
+
 
 
             $(`#${id}-title`).show();
@@ -301,7 +301,7 @@
 
                         <div id="${id}-editTitle" class="edit" style="font-size: xx-large">
                           <label for="inputEmail4" class="form-label"></label>
-                          <input type="text" class="form-control" id="${id}-texttitle" placeholder="제목">
+                          <input type="text" class="form-control" id="${id}-textTitle" placeholder="제목">
                         </div>
                         <div id="${id}-editPassword" class="edit">
                             <label for="inputPassword4" class="form-label"></label>
@@ -352,7 +352,7 @@
 
         // 메모를 수정합니다.
         function submitEdit(id) {
-            let title = $(`#${id}-texttitle`).val().trim();          // 1. 작성 대상 메모의 username과 contents 를 확인합니다.
+            let title = $(`#${id}-textTitle`).val().trim();          // 1. 작성 대상 메모의 username과 contents 를 확인합니다.
             let contents = $(`#${id}-textarea`).val().trim();
 
             data = {'title': title,  'contents': contents};
@@ -397,72 +397,32 @@
         <h2>Timeline Service</h2>
     </div>
     <div class="area-write">
-        <form class="field row g-3">
+        <form class="row g-3">
             <div class="col-md-6">
                 <label for="writer" class="form-label">Writer</label>
                 <input type="text" class="form-control" id="writer">
             </div>
             <div class="col-md-6">
-                <label for="password" class="form-label">Pw</label>
+                <label for="password" class="form-label">Password</label>
                 <input type="password" class="form-control" id="password">
             </div>
-            <div class="mb-3">
+            <div class="col-12">
                 <label for="title" class="form-label">Title</label>
-                <input type="text" class="form-control" id="title" placeholder="제목을 입력해주세요">
+                <input type="text" class="form-control" id="title" placeholder="제목을 입력해 주세요.">
             </div>
-            <div class="mb-3">
-                <label for="contents" class="form-label">Contents</label>
-                <textarea class="form-control" placeholder="내용을 입력해주세요" name="contents" id="contents" rows="3"></textarea>
+            <div class="form-floating">
+                <label for="contents" class="form-label"></label>
+                <textarea class="form-control" placeholder="내용을 입력해주세요" name="contents" id="contents" style="height: 150px" rows="3"></textarea>
             </div>
             <div class="mybtns">
                 <button type="button" class="btn btn-dark" onclick="writePost()">등록하기</button>
             </div>
         </form>
     </div>
-    <div id="cards-box" class="area-read"><div class="card">
-        <!-- date/username 영역 -->
-        <div class="metadata">
-            <div class="date">
-                2022-05-26T13:51:59.683
-            </div>
-            <div id="13-writer" class="writer">
-                asdasd
-            </div>
-        </div>
-        <!-- contents 조회/수정 영역-->
-        <div class="contents">
-            <div id="13-title" class="text" style="font-size: xx-large; display: none;">
-                sdf
-            </div>
-            <div id="13-password" class="edit" style="display: none;">
-                sdf
-            </div>
-            <div id="13-contents" class="text" style="display: none;">
-                sdf
-            </div>
+        <div id="cards-box" class="area-read"><div class="card">
 
-            <div id="13-editTitle" class="edit" style="font-size: xx-large; display: block;">
-                <label for="inputEmail4" class="form-label"></label>
-                <input type="text" class="form-control" id="13-texttitle" placeholder="제목">
-            </div>
-            <div id="13-editPassword" class="edit" style="display: block;">
-                <label for="inputPassword4" class="form-label"></label>
-                <input type="password" class="form-control" id="13-checkpassword" placeholder="비밀번호">
-            </div>
-            <div id="13-editArea" class="edit form-floating" style="display: block;">
-                <textarea class="form-control" placeholder="Leave a comment here" id="13-textarea" style="height: 100px"></textarea>
-                <label for="floatingTextarea2"></label>
-            </div>
         </div>
-
-        <!-- 버튼 영역-->
-        <div class="footer">
-            <img id="13-edit" class="icon-start-edit" src="images/edit.png" alt="" onclick="editPost('13')" style="display: none;">
-            <img id="13-delete" class="icon-delete" src="images/delete.png" alt="" onclick="deleteOne('13')">
-            <img id="13-submit" class="icon-end-edit" src="images/done.png" alt="" onclick="submitEdit('13')" style="display: inline;">
-        </div>
-    </div></div>
+    </div>
 </div>
-
-
-</body></html>
+</body>
+</html>
