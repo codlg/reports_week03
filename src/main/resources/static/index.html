@@ -305,7 +305,7 @@
                         </div>
                         <div id="${id}-editPassword" class="edit">
                             <label for="inputPassword4" class="form-label"></label>
-                            <input type="password" class="form-control" id="${id}-checkpassword" placeholder="비밀번호">
+                            <input type="password" class="form-control" id="${id}-checkPassword" placeholder="비밀번호">
                         </div>
                         <div id="${id}-editArea" class="edit form-floating">
                             <textarea class="form-control" placeholder="Leave a comment here" id="${id}-textarea" placeholder="내용을 입력해주세요." style="height: 100px"></textarea>
@@ -352,19 +352,33 @@
 
         // 메모를 수정합니다.
         function submitEdit(id) {
-            let title = $(`#${id}-textTitle`).val().trim();          // 1. 작성 대상 메모의 username과 contents 를 확인합니다.
-            let contents = $(`#${id}-textarea`).val().trim();
-
-            data = {'title': title,  'contents': contents};
+            let password = $(`#${id}-checkPassword`).val();
 
             $.ajax({
-                type: "PUT",
-                url: `/api/boards/${id}`,
+                type: "GET",
+                url: `/api/boards/${id}/check`,
                 contentType: "application/json",
-                data: JSON.stringify(data),
+                data: {id},
                 success: function (response) {
-                    alert('메시지 변경에 성공하였습니다.');
-                    window.location.reload();
+
+                    if(password !== response){
+                        alert("비밀번호를 확인하세요")
+                    }else {
+                        let title = $(`#${id}-textTitle`).val().trim();          // 1. 작성 대상 메모의 username과 contents 를 확인합니다.
+                        let contents = $(`#${id}-textarea`).val().trim();
+
+                        data = {'title': title, 'contents': contents};
+                        $.ajax({
+                            type: "PUT",
+                            url: `/api/boards/${id}`,
+                            contentType: "application/json",
+                            data: JSON.stringify(data),
+                            success: function (response) {
+                                alert('메시지 변경에 성공하였습니다.');
+                                window.location.reload();
+                            }
+                        });
+                    }
                 }
             });
         }
