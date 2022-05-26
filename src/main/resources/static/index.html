@@ -373,19 +373,23 @@
 
         // 메모를 수정합니다.
         function submitEdit(id) {
-            let title = $(`#${id}-title`).val().trim();
+            let password = $(`#${id}-checkPassword`).val();
+            let title = $(`#${id}-textTitle`).val().trim();
             let contents = $(`#${id}-textarea`).val().trim();
             if (isValidContents(contents) == false) {                   // 2. 작성한 메모가 올바른지 isValidContents 함수를 통해 확인합니다.
                 return;
             }
-            let data = {'title': title, 'contents': contents};    // 3. 전달할 data JSON으로 만듭니다.
+            let data = {'title': title,'password': password, 'contents': contents};
+              // 3. 전달할 data JSON으로 만듭니다.
 
             $.ajax({                                                    // 4. PUT /api/memos/{id} 에 data를 전달합니다.
                 type: "PUT",
-                url: `/api/boards/${id}`,
+                url: `/api/boards/${id}/check`,
                 contentType: "application/json",
                 data: JSON.stringify(data),
                 success: function (response) {
+
+
                     alert('메시지 변경에 성공하였습니다.');
                     window.location.reload();
                 }
